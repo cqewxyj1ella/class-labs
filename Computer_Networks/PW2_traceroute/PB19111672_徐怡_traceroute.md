@@ -10,7 +10,7 @@
 
 1. 一共有36hops
 
-![hops](..\img\traceroute-hops.png)
+![hops](../img/traceroute-hops.png)
 
 ## A3
 
