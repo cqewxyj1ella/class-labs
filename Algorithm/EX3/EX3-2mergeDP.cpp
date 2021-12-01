@@ -28,18 +28,23 @@ int main(void) {
     //initialize an n*n matrix for dynamic programing
 
     for (int l = 2; l <= n; l++) {
+        //printf("\nl: %d\n", l);
         for (int i = 0; i < n-l+1; i++) {
             int j;
             j = i+l-1; dp_matrix[i][j] = INFINITE;
             int array_sum = 0;
             int m_i_j = dp_matrix[i][j];
-            for (int k = i; k <= j; k++) {
+            for (int k = i; k < j; k++) {
+                //printf("i: %d, j: %d, k:%d\n", i, j, k);
                 array_sum += array_size[k];
                 int q = dp_matrix[i][k] + dp_matrix[k+1][j];
                 if (q < m_i_j)
                     m_i_j = q;
             }
+            array_sum += array_size[j];
             dp_matrix[i][j] = m_i_j + array_sum;
+            //printf("array_sum: %d\n", array_sum);
+            //printf("dp_matrix[i][j]: %d\n", dp_matrix[i][j]);
         }
     }
     printf("%d\n", dp_matrix[0][n-1]);
@@ -48,6 +53,6 @@ int main(void) {
     printf("%d\n", a);
     //test for inifite int number
     */
-    system("pause");
+    //system("pause");
     return 0;
 }
