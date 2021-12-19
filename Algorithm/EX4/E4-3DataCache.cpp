@@ -11,6 +11,7 @@
  * 1) c++ priority queue
  * 2) fibnaci heap
  */
+// ACed
 #include <iostream>
 #include <queue>
 #include <stdlib.h>
@@ -18,7 +19,8 @@
 #include <string.h>
 
 using namespace std;
-#define MEM_SIZE 10000
+#define MEM_SIZE 10010
+#define MAX_ACCESS_TIME 10001
 
 typedef struct Cache {
     /* addr is the corresponding cached memory address
@@ -61,25 +63,17 @@ int main(void) {
     int miss_times = 0;
     for (int i = 0; i < N; i++) {
         int access_mem = access[i];
+        mem[access_mem].access_time_q.pop(); // accessed
+
         if (mem[access_mem].cached) { // HIT
-            mem[access_mem].access_time_q.pop(); // accessed
-            cache_size++;
-            CachePtr insert_cache = (CachePtr)malloc(sizeof(Cache));
-            insert_cache->addr = access[i];
-            insert_cache->next_access_time = mem[access_mem].access_time_q.front();
-            cache.push(*insert_cache);
             cached_num++;
-            // put the next access time into the cache queue
+            cache_size++;
+            // (because will put one new entry in cache
+            // to store the next access time of this memory block)
         }
         else { // MISS
             miss_times++; // missed
-            mem[access_mem].cached = true;
-            mem[access_mem].access_time_q.pop(); // accessed
-            if (cached_num < cache_size) { // not filled
-                CachePtr insert_cache = (CachePtr)malloc(sizeof(Cache));
-                insert_cache->addr = access_mem;
-                insert_cache->next_access_time = mem[access_mem].access_time_q.front();
-                cache.push(*insert_cache);
+            if (cached_num < cache_size) { // not filled yet
                 cached_num++;
             }
             else { // filled -> replacememt
@@ -88,13 +82,19 @@ int main(void) {
                 auto replaced = cache.top();
                 cache.pop();
                 mem[replaced.addr].cached = false;
-                // insert new cache
-                CachePtr insert_cache = (CachePtr)malloc(sizeof(Cache));
-                insert_cache->addr = access_mem;
-                insert_cache->next_access_time = mem[access_mem].access_time_q.front();
-                cache.push(*insert_cache);
             }
         }
+
+        // make the common part outside of if-else block: add new cache entry to the priority queue
+        CachePtr insert_cache = (CachePtr)malloc(sizeof(Cache));
+        insert_cache->addr = access_mem;
+        if (!mem[access_mem].access_time_q.empty())
+            insert_cache->next_access_time = mem[access_mem].access_time_q.front();
+        else 
+            insert_cache->next_access_time = MAX_ACCESS_TIME;
+        cache.push(*insert_cache);
+
+        mem[access_mem].cached = true; // accessed
     }
 
     cout << miss_times << endl;
