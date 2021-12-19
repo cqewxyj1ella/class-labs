@@ -15,7 +15,7 @@
  * then d can be smaller;
  * else d must be bigger
  */
-
+// ACed
 #include <iostream>
 #include <algorithm>
 #include <stdlib.h>
@@ -26,6 +26,8 @@ using namespace std;
 
 int main(void) {
     // input and initialization
+    ios::sync_with_stdio(false);
+    cin.tie(0);
     int N = 0, M = 0;
     cin >> N >> M;
     int* coordinates = (int*)malloc(N*sizeof(int));
@@ -38,7 +40,7 @@ int main(void) {
     int high = coordinates[N-1] - coordinates[0];
     // these two are the binary search pointers
     // 0 <= d <= x[max] - x[min]
-    while (low != high) {
+    while (low <= high) {
         int d = (low + high) / 2; // binary search pointer: min distance of two clothes
         int leftCloth = coordinates[0]; // the coordinate of the left cloth of coor[i]
         int hangedClothes = 1; // hanged the leftmost cloth
@@ -51,6 +53,12 @@ int main(void) {
             }
             // else: the interval
         }
+
+        // renew the binary search pointers
+        if (hangedClothes >= N-M) // hanged more than command, d can be smaller
+            low = d + 1;
+        else // hanged less than command, d should be bigger
+            high = d - 1;
     }
-    
+    cout << high << endl; // that is also d, because d = (low+high)/2 and low == high
 }
