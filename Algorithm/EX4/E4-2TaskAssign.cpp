@@ -9,6 +9,7 @@
  * solution:
  * greedy choice: always choose the task which has lest left time
 */
+// ACed
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,7 +28,7 @@ typedef struct task{
     bool operator<(const task& rhs) const {
         return p > rhs.p;
     }
-} task, *taskList;
+}task, *taskList;
 
 int myCmp_r(const void* a, const void* b) {
     return (*(task*)a).r - (*(task*)b).r;
