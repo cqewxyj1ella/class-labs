@@ -47,13 +47,11 @@ class DNS_Relay_Server:      #一个relay server实例，通过缓存文件和�
                 if ip_lookup != "0.0.0.0":
                     print("not Intercepted")
                     res = RecvDp.generate_response(ip_lookup, False)
-                    print("res: {}".format(res))
                     sent = server_socket.sendto(res, addr)
                     print('sent {} bytes back to {}'.format(sent, addr))
                 else:
                     print("Intercepted")
                     res = RecvDp.generate_response("0.0.0.0", True)
-                    print("res tranverted: {}".format(res))
                     sent = server_socket.sendto(res, addr)
                     print('sent {} bytes back to {}'.format(sent, addr))
             else:
@@ -62,10 +60,10 @@ class DNS_Relay_Server:      #一个relay server实例，通过缓存文件和�
                 print('sent {} bytes back to {}'.format(sent, self.name_server))
         else:               # response
             print("!!!!!!!response")
-            if ip_lookup is None:
-                local_addr = self.trans[RecvDp.ID]
-                sent = server_socket.sendto(data, local_addr)
-                print('sent {} bytes back to {}'.format(sent, local_addr))
+            local_addr = self.trans[RecvDp.ID]
+            sent = server_socket.sendto(data, local_addr)
+            print('sent {} bytes back to {}'.format(sent, local_addr))
+
 
 class DNS_Packege:        #一个DNS Frame实例，用于解析和生成DNS帧
     def __init__(self,data):
@@ -148,7 +146,6 @@ class DNS_Packege:        #一个DNS Frame实例，用于解析和生成DNS帧
         if not Intercepted:
             for i in ip.split('.'):
                 res[indx] = int(i)
-                print(res[indx])
                 indx += 1
         else:   # 0.0.0.0
             for i in range(4):
@@ -161,6 +158,6 @@ class DNS_Packege:        #一个DNS Frame实例，用于解析和生成DNS帧
 if __name__ == '__main__':
     cache_file = 'example.txt'
     #name_server=('202.141.160.1',53)
-    name_server = ('223.5.5.5', 53)
+    name_server = ('202.141.160.1', 53)
     relay_server = DNS_Relay_Server(cache_file,name_server)   #构造一个DNS_Relay_Server实例
     relay_server.run()
