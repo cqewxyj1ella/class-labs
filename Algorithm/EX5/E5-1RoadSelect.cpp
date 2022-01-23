@@ -7,7 +7,7 @@
  * minimum spanning tree
  * use c++ priority queue instead of FIB heap(duplicated node will be marked as visted[])
  */
-
+// ACed
 #include <iostream>
 #include <algorithm>
 #include <vector>
